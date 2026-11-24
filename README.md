@@ -78,7 +78,22 @@ The host provides them. Do not package replacement copies or import internal act
 database classes, or player implementation classes. A plugin should use the public extractor
 and plugin contracts.
 
-The packaging layout is adapted from
-[PipePipePluginTemplate at 91950887](https://github.com/InfinityLoop1308/PipePipePluginTemplate/tree/91950887dfd173263ecacfc466437a33777d242d).
-This template and the integrated extractor SDK are GPL-3.0-or-later; see `LICENSE` and preserve
-the source notices when adapting them.
+## plugin.json
+
+| Field | Rules |
+| ----- | ----- |
+| `pluginId` | Reverse domain, `[a-z0-9_.]`, at most 128 chars. Never change it after release. |
+| `name` | Must equal the `StreamingService` name. |
+| `versionCode` | Integer, increase with every release. |
+| `versionName` | Shown to users. |
+| `apiVersion` | `major.minor` of the plugin API you build against. Currently `1.0`. A host loads plugins with the same major and a minor not above its own. |
+| `author` | Required. Shown in the plugin list. |
+| `entryClass` | Class implementing `PipePipePlugin`. |
+| `issueUrl` | Optional, https. Where users report bugs of your plugin. When a failure comes from your code, PipePipe sends the user here instead of its own tracker; without it they are told to reach you by the author name. |
+| `description` | Optional. |
+| `icon` | Optional, path of a PNG/WebP in the package. Square, single color, transparent background, at most 512 px. The app tints it. |
+| `settings` | Optional list of `string` or `boolean` settings. The app renders them; read the values with `context.getPreferences()` (see `MyService.getBaseUrl()`). |
+| `login` | Optional cookie login: `{"url": "https://...", "cookie": "<cookie name>", "key": "<preference key>"}`. The settings page gets Login and Log out buttons. Login opens `url` in a web view and, once the cookie is set, stores the cookie header under `key` (default `login_cookies`); log out stores an empty string. Read it with `context.getPreferences()`, `addChangeListener` reports changes. `url` must be https. |
+| `theme` | Optional primary colors, applied by the app as an overlay on its light, dark and black themes while your service is selected: `{"light": "#F57C00", "dark": "#A35300"}`. Colors are `#RRGGBB`. At least one of `light` and `dark` is needed, a missing one is taken from the other; the black theme uses `dark`. The status bar uses the primary color; the accent color is black in the light theme and white in the dark theme, and cannot be configured. |
+
+The `serviceId` passed to `createService` must be handed to the `StreamingService` constructor unchanged. It is derived from `pluginId` by the host, so it is the same on every device and never changes for a given `pluginId`.
