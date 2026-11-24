@@ -17,7 +17,7 @@ extractors still need implementation; the example does not provide a working str
 - Android SDK platform **37.0** and Build Tools **36.1.0**, as declared in
   [gradle.properties](gradle.properties).
 - A `wizestream-plugin-api.jar` exported from a compatible WizeStream checkout.
-- A WizeStream build that includes native plugin support, on Android **7/API 24 or newer**,
+- WizeStream **1.52.0 or newer**, on Android **7/API 24 or newer**,
   for installation and testing.
 
 This standalone repository does **not** include a Gradle wrapper. The commands below use the
@@ -139,7 +139,7 @@ The sample's core configuration is:
   "versionName": "1.0.0",
   "host": "wizestream",
   "apiVersion": "2.0",
-  "minHostVersionCode": 1051000,
+  "minHostVersionCode": 1052000,
   "minAndroidSdk": 24,
   "requiredCapabilities": ["profile-preferences"],
   "author": "Your name",
@@ -167,9 +167,9 @@ The sample's core configuration is:
 | `login` | Optional cookie metadata containing an HTTPS `url`, required cookie name and preference `key` (default `login_cookies`). See below for the host UI. |
 | `theme` | Optional color metadata is parsed for format compatibility; WizeStream retains its own application theme. |
 
-The sample's `minHostVersionCode: 1051000` identifies the development baseline. Before releasing
-a plugin, set it to the first published host version that actually contains the API you use.
-An older APK does not gain plugin support just because its version code matches that value.
+The sample's `minHostVersionCode: 1052000` requires WizeStream **1.52.0 or newer**, the first
+release with native plugin support. Raise this minimum if your plugin uses host APIs added
+in a later release.
 
 ### Settings and optional login cookies
 
