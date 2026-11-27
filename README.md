@@ -127,6 +127,25 @@ They belong to the profile that created the service. Installation, updates and p
 with loaded plugins require an app restart. Plugins run inside the app process; these APIs
 provide profile-aware behavior, not a sandbox for untrusted code.
 
+## Give the service its own icon
+
+Replace `src/main/resources/icon.png` with your service's **square, single-color PNG
+on a transparent background**. The sample is 256 × 256; the host accepts at most
+512 × 512 pixels and 256 KiB. Do not add an opaque background: the service selector
+tints the image for the active theme. The editable sample is
+[`artwork/service-icon.svg`](artwork/service-icon.svg); rendering instructions are in
+[artwork/README.md](artwork/README.md).
+
+Keep `"icon": "icon.png"` in `plugin.json`, or update it to the exact package-relative
+path under `src/main/resources`. `pluginPackage` checks the final archive for the
+declared image, validates its encoded size and dimensions, and decodes it before the
+package can be signed. No new host API or remote icon URL is required. A missing icon
+uses WizeStream's generic plugin symbol.
+
+After installation or update, restart WizeStream to load the new icon. Preserve the
+plugin ID and signing key, and increase `versionCode` when changing artwork in an
+already published plugin.
+
 ## Native manifest
 
 The sample's core configuration is:
@@ -139,7 +158,8 @@ The sample's core configuration is:
   "versionName": "1.0.0",
   "host": "wizestream",
   "apiVersion": "2.0",
-  "minHostVersionCode": 1051000,
+  "icon": "icon.png",
+  "minHostVersionCode": 1052000,
   "minAndroidSdk": 24,
   "requiredCapabilities": ["profile-preferences"],
   "author": "Your name",
@@ -162,14 +182,14 @@ The sample's core configuration is:
 | `entryClass` | Fully qualified public class implementing `WizeStreamPlugin`, with a no-argument constructor. |
 | `description` | Optional service description. |
 | `issueUrl` | Optional HTTPS issue-tracker URL, at most 512 characters. |
-| `icon` | Optional package-relative image path without `..`. Use a square PNG/WebP with a transparent background, at most 512 pixels per edge. |
+| `icon` | Optional package-relative image path without `..`. Use a square PNG with a transparent background, at most 512 pixels per edge and 256 KiB. |
 | `settings` | Optional `string` or `boolean` preferences with a key, title, optional summary and default value. |
 | `login` | Optional cookie metadata containing an HTTPS `url`, required cookie name and preference `key` (default `login_cookies`). See below for the host UI. |
 | `theme` | Optional color metadata is parsed for format compatibility; WizeStream retains its own application theme. |
 
-The sample's `minHostVersionCode: 1051000` identifies the development baseline. Before releasing
-a plugin, set it to the first published host version that actually contains the API you use.
-An older APK does not gain plugin support just because its version code matches that value.
+The sample's `minHostVersionCode: 1052000` requires WizeStream **1.52.0 or newer**, the first
+published release with native plugin support. Raise this minimum if your service uses host APIs
+added in a later release.
 
 ### Settings and optional login cookies
 
